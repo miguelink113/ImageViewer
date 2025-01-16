@@ -5,6 +5,8 @@ import software.ulpgc.imageviewer.model.Image;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseWheelEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -12,6 +14,20 @@ import java.io.IOException;
 public class SwingImageDisplay extends JPanel implements ImageDisplay {
     private software.ulpgc.imageviewer.model.Image image;
     private BufferedImage bitmap;
+    private double zoomFactor = 1.0;  // Factor de zoom inicial
+
+    public SwingImageDisplay() {
+        addMouseWheelListener(new MouseAdapter() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                if (e.getWheelRotation() < 0) {
+                    zoomIn();
+                } else {
+                    zoomOut();
+                }
+            }
+        });
+    }
 
     @Override
     public void show(software.ulpgc.imageviewer.model.Image image) {
@@ -30,20 +46,36 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
         g.setColor(Color.BLACK);
         g.fillRect(0, 0, this.getWidth(), this.getHeight());
 
-        Resizer resizer = new Resizer(new Dimension(this.getWidth(), this.getHeight()));
+        Resizer resizer = new Resizer(new Dimension(this.getWidth(), this.getHeight()), zoomFactor);
         Dimension resized = resizer.resize(new Dimension(bitmap.getWidth(), bitmap.getHeight()));
 
-        int x = (this.getWidth() - resized.width) / 2;  // Usar resized.width correctamente
-        int y = (this.getHeight() - resized.height) / 2;  // Usar resized.height correctamente
+        int x = (this.getWidth() - resized.width) / 2;
+        int y = (this.getHeight() - resized.height) / 2;
 
         g.drawImage(bitmap, x, y, resized.width, resized.height, null);
     }
 
+    public void zoomIn() {
+        if (zoomFactor < 2) {
+            zoomFactor += 0.1;
+            repaint();
+        }
+    }
+
+    public void zoomOut() {
+        if (zoomFactor > 0.5) {
+            zoomFactor -= 0.1;
+            repaint();
+        }
+    }
+
     public static class Resizer {
         private final Dimension panelDimension;
+        private final double zoomFactor;
 
-        public Resizer(Dimension panelDimension) {
+        public Resizer(Dimension panelDimension, double zoomFactor) {
             this.panelDimension = panelDimension;
+            this.zoomFactor = zoomFactor;
         }
 
         public Dimension resize(Dimension imageDimension) {
@@ -66,7 +98,7 @@ public class SwingImageDisplay extends JPanel implements ImageDisplay {
                 resizedHeight = (int) (imageHeight * ((double) panelWidth / imageWidth));
             }
 
-            return new Dimension(resizedWidth, resizedHeight);
+            return new Dimension((int) (resizedWidth * zoomFactor), (int) (resizedHeight* zoomFactor));
         }
     }
 

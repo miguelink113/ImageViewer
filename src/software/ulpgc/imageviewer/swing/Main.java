@@ -10,14 +10,18 @@ import java.nio.file.Paths;
 import javax.swing.JFrame;
 
 public class Main {
-    public static final String root = "C:\\Users\\mcash\\Pictures";
+    public static final String root = "images";
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
         frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        File file = Paths.get(root).toFile();
+
+        String projectDirectory = System.getProperty("user.dir");
+        File file = Paths.get(projectDirectory, root).toFile();
+
         Image image = new FileImageLoader(file).load();
         frame.imageDisplay().show(image);
         frame.add("<", new PreviousImageCommand(frame.imageDisplay()));
         frame.add(">", new NextImageCommand(frame.imageDisplay()));
         frame.setVisible(true);
-    }}
+    }
+}

@@ -12,7 +12,6 @@ public class MainFrame extends JFrame {
     private final Map<String, Command> commands;
 
 
-
     public MainFrame() {
         this.commands = new HashMap<>();
         setTitle("Image Viewer");
