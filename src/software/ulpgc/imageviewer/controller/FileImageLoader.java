@@ -1,10 +1,12 @@
-package software.ulpgc.imageviewer;
+package software.ulpgc.imageviewer.controller;
+
+import software.ulpgc.imageviewer.model.Image;
 
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.Set;
 
-public class FileImageLoader implements ImageLoader{
+public class FileImageLoader implements ImageLoader {
     private final File[] files;
 
     public FileImageLoader(File folder) {

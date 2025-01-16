@@ -1,4 +1,6 @@
-package software.ulpgc.imageviewer;
+package software.ulpgc.imageviewer.swing;
+
+import software.ulpgc.imageviewer.controller.Command;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,12 +20,12 @@ public class MainFrame extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-        add(createImageDisplay(), BorderLayout.CENTER);
+        add(createImageDisplay());
         add(createToolbar(), BorderLayout.SOUTH);
     }
 
     private Component createToolbar() {
-        JPanel panel = new JPanel();
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
         panel.add(createButton("<"));
         panel.add(createButton(">"));
         return panel;
@@ -38,6 +40,7 @@ public class MainFrame extends JFrame {
     private Component createImageDisplay() {
         SwingImageDisplay display = new SwingImageDisplay();
         this.imageDisplay = display;
+        display.setLayout(new BorderLayout());
         return display;
     }
 
